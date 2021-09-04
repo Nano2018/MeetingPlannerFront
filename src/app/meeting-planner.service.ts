@@ -11,7 +11,7 @@ export class MeetingPlannerService {
   constructor(private http : HttpClient) { }
 
   getAvailableRoom(reservation : Reservation) : Observable<any>{
-    return this.http.post("http://localhost:8080/api/meetingsPlanner/rooms",reservation);
+    return this.http.post("http://localhost:8080/api/meetingPlanner/rooms",reservation);
   }
 
 }
