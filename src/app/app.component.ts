@@ -13,7 +13,6 @@ import { MeetingPlannerService } from './meeting-planner.service';
 
 export class AppComponent implements OnInit {
   noRoomAvailable : boolean = false;
-  title = 'meetingPlanner';
   room : any = null;
   selectedSlot : number = 0;
   meetings : Meeting[] = [];
@@ -49,6 +48,7 @@ export class AppComponent implements OnInit {
     }
 
   }
+
   initForm(){
     this.meetingPlannerForm = this.fb.group({
       nbPersons : ['',Validators.required],
@@ -58,31 +58,30 @@ export class AppComponent implements OnInit {
   }
 
   checkForAvailableRoom(){
-
-    let startSLot : any = this.datePipe.transform(new Date(this.meetingPlannerForm.controls.slot.value), 'yyyy-mm-dd')+`${this.selectedSlot}:00:00`
+    let startSLot : any = this.datePipe.transform(new Date(this.meetingPlannerForm.controls.slot.value), 'yyyy-MM-dd')+`T${this.selectedSlot > 9 ? ''+this.selectedSlot : '0'+this.selectedSlot}:00:00`
     let reservation : Reservation = {
-      nbPersons : this.meetingPlannerForm.controls.nbPersons.value,
+      nbPersons : Number(this.meetingPlannerForm.controls.nbPersons.value),
       meetingType : this.meetingPlannerForm.controls.meetingType.value,
       startSlot : startSLot
     }
 
-    this.meetinPlannerService.getAvailableRoom(reservation).subscribe(_result=>{
-        this.room = _result;
+    this.meetinPlannerService.getAvailableRoom(reservation).subscribe(
+      (response)=>{
+        this.room = response;
         setTimeout(()=>{
           this.room = null;
           this.initForm();
-        },10000),
-
-        (error:any) => {                            
-          this.room = null;
-          this.noRoomAvailable = true;
-          setTimeout(()=>{
-            this.room = null;
-            this.initForm();
-            this.noRoomAvailable = false;
-          },10000)
-        }
-    })
+        },10000);
+      },
+      (error) => {      
+        this.room = null;
+        this.noRoomAvailable = true;
+        setTimeout(()=>{
+          this.initForm();
+          this.noRoomAvailable = false;
+        },3000);
+      }
+    )
   }
   
 }

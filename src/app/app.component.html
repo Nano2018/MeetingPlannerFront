@@ -1,23 +1,24 @@
 
 <div class="meetings-form" [formGroup]="meetingPlannerForm" fxLayout="column">
     <img src='assets/canalplus.png' alt=""> 
+
     <p style="margin : auto; margin-bottom :20px; color: blue;">
         <b>Meeting Planner</b>
     </p>
 
-    <div *ngIf="noRoomAvailable">
-        <p>
-            No Room Available
-        </p>
+    <div *ngIf="noRoomAvailable" style="text-align: center; font-weight: bold; color: red; border : 2px solid red; border-radius: 5px; padding: 10px;">
+        <span> No Room Available</span>
     </div>
     
-    <div *ngIf="room" style="margin : auto; margin :10px;">
-        <p style="color: green;">
-            you must collect this material from the reserve
-        </p>
-        <ul>
-            <li *ngFor="let reservation of room.reservation">{{reservation}}</li>
-        </ul>
+    <div *ngIf="room" style="border : 2px solid green; border-radius: 5px; padding: 10px;">
+        <p style="color: green;">the room reserved for you is : <b>{{ room.roomName }}</b></p>
+        <div *ngIf="room.reserves.length > 0">
+          <p>You must collect this material from the reserve:</p>
+          <ul>
+              <li *ngFor="let equipment of room.reserves"><b>{{equipment}}</b></li>
+          </ul>
+        </div>
+        
     </div>
 
     <mat-form-field appearance="fill" style="width: 100;">
